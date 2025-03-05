@@ -1,4 +1,4 @@
-# Labirinto 3D
+# Allien Kill
 
 Um jogo de labirinto em primeira pessoa desenvolvido com Three.js.
 
