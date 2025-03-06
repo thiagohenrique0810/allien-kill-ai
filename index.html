@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alien Kill</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: url('./background.jpg') no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            min-height: 100vh;
+            min-width: 100vw;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+        #info {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 100;
+            opacity: 0;
+            animation: showAndHide 5s forwards;
+        }
+        @keyframes showAndHide {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, 50px);
+            }
+            10% {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+            80% {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50px);
+            }
+        }
+        #gameMenu {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, rgba(25, 25, 35, 0.95), rgba(15, 15, 25, 0.95));
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            min-width: 320px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            z-index: 3;
+        }
+        .menu-title {
+            color: #fff;
+            font-size: 32px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+        .start-button {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 20px 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+        .config-section {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .config-title {
+            color: #fff;
+            font-size: 18px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .config-option {
+            margin: 10px 0;
+            color: #fff;
+        }
+        select, input[type="color"] {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px;
+            border-radius: 5px;
+            color: white;
+            width: 100%;
+            margin-top: 5px;
+            cursor: pointer;
+        }
+        select:focus {
+            outline: none;
+            border-color: rgba(255, 107, 107, 0.5);
+        }
+        option {
+            background: #1a1a1a;
+            color: white;
+        }
+        .back-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            z-index: 100;
+            display: none;
+        }
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <button id="backButton" class="back-button">Menu Principal</button>
+    <div id="info">
+        Use WASD ou as setas do teclado para se mover<br>
+        Use o mouse para olhar ao redor<br>
+        Clique para atirar<br>
+        Pressione ESC para sair
+    </div>
+    <div id="gameMenu">
+        <h1 class="menu-title">Alien Kill</h1>
+        <div class="config-section">
+            <div class="config-title">Configurações</div>
+            <div class="config-option">
+                <label for="timeOfDay">Período do Dia:</label>
+                <select id="timeOfDay">
+                    <option value="day">Dia</option>
+                    <option value="sunset">Pôr do Sol</option>
+                    <option value="night">Noite</option>
+                </select>
+            </div>
+            <div class="config-option">
+                <label for="weaponColor">Cor da Arma:</label>
+                <input type="color" id="weaponColor" value="#4a5a6a">
+            </div>
+            <div class="config-option">
+                <label for="weaponTexture">Textura da Arma:</label>
+                <select id="weaponTexture">
+                    <option value="digital">Camuflagem Digital</option>
+                    <option value="urban">Camuflagem Urbana</option>
+                    <option value="desert">Camuflagem Deserto</option>
+                    <option value="metal">Metálica</option>
+                </select>
+            </div>
+        </div>
+        <button class="start-button" id="startButton">Iniciar Jogo</button>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="game.js"></script>
+</body>
+</html> 
